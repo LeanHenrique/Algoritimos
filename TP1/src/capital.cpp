@@ -1,7 +1,7 @@
 #include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/capital.h"
 #include <queue>
 #include <iostream>
-#include <algorithm>
+
 
 
 std::pair<std::string, int> Bfs(const std::string& inicio, const std::unordered_map<std::string, std::vector<std::string>>& Grafo) {
@@ -41,13 +41,16 @@ std::pair<std::string, int> Bfs(const std::string& inicio, const std::unordered_
         return {"", -1};
     }
 
-    // Encontrar o vértice com a maior distância
-    auto maiorDistancia = std::max_element(distancias.begin(), distancias.end(),
-                                           [](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
-                                               return a.second < b.second;  // Compara os valores de distância
-                                           });
+// Encontrar o vértice com a maior distância manualmente
+int maiorDistanciaValor = -1; // Ou qualquer valor inicial que seja mais baixo que a distância mínima possível
 
-    std::pair<std::string, int> parResultado = {inicio, maiorDistancia->second};                      
+// Iterar sobre todas as distâncias para encontrar o maior
+for (const auto& par : distancias) {
+    if (par.second > maiorDistanciaValor) {
+        maiorDistanciaValor = par.second;
+    }
+}
+    std::pair<std::string, int> parResultado = {inicio, maiorDistanciaValor};                      
 
     // Retorna o par (vértice, maior distância)
     return parResultado;
