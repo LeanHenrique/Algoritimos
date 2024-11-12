@@ -1,12 +1,11 @@
 #include <iostream>
-#include <unordered_map>
-#include <vector>
-#include <string>
+#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/capital.h"
 
 int main(){
   std::unordered_map<std::string, std::vector<std::string>> Grafo;
   
   int numArestas, numVertices;
+  std::vector<std::string> PossiveisNovasOrigens;
     
     std::cin >> numVertices >> numArestas;
 
@@ -16,17 +15,21 @@ int main(){
 
         // Adiciona a aresta de origem para destino com o peso dado
         Grafo[origem].emplace_back(destino);
-        
-    }  
-        // Exibe a lista de adjacência
-    std::cout << "\nLista de adjacência:\n";
-    for (const auto& [vertex, neighbors] : Grafo) {
-        std::cout << "Vértice " << vertex << ":";
-        for (const auto& neighbor : neighbors) {
-            std::cout << " " << neighbor;
+        PossiveisNovasOrigens.push_back(destino);
+    } 
+
+    // Garantir que todos os vértices, incluindo destinos, existam no grafo
+    for (int i = 0; i < PossiveisNovasOrigens.size(); i++){
+        const std::string& vertice = PossiveisNovasOrigens[i];
+        if (Grafo.find(vertice) == Grafo.end()) {
+            // Se o vértice não existe, cria com uma lista vazia de vizinhos
+            Grafo[vertice] = {};
         }
-        std::cout << std::endl;
-    }
+    } 
+   
+    std::string resultado = Capital(Grafo);
+
+    std::cout << resultado << std::endl; 
 
     return 0;
 }
