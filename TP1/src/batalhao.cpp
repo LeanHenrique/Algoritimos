@@ -1,31 +1,8 @@
 #include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/batalhao.h"
+#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/bfs.h"
+#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/dfs.h"
 
-// Função DFS para preencher a pilha com a ordem de finalização dos vértices
-void DfsOrder(const std::string& vertice, 
-              const std::unordered_map<std::string, std::vector<std::string>>& Grafo, 
-              std::unordered_set<std::string>& visitados, 
-              std::stack<std::string>& pilha) {
-    visitados.insert(vertice);
-    for (const auto& vizinho : Grafo.at(vertice)) {
-        if (visitados.find(vizinho) == visitados.end()) {
-            DfsOrder(vizinho, Grafo, visitados, pilha);
-        }
-    }
-    pilha.push(vertice); // Armazena o vértice na pilha ao final da exploração
-}
 
-// Função DFS para o grafo transposto para marcar um componente fortemente conexo
-void DfsTranspose(const std::string& vertice, 
-                  const std::unordered_map<std::string, std::vector<std::string>>& GrafoTransposto, 
-                  std::unordered_set<std::string>& visitados, std::vector<std::string>& componente) {
-    visitados.insert(vertice);
-    componente.push_back(vertice);
-    for (const auto& vizinho : GrafoTransposto.at(vertice)) {
-        if (visitados.find(vizinho) == visitados.end()) {
-            DfsTranspose(vizinho, GrafoTransposto, visitados,componente);
-        }
-    }
-}
 
 // Função principal para encontrar componentes fortemente conexos usando o algoritmo de Kosaraju
 int Kosaraju(const std::unordered_map<std::string, std::vector<std::string>>& Grafo, std::vector<std::vector<std::string>>& componentes ) {
@@ -74,39 +51,6 @@ int Kosaraju(const std::unordered_map<std::string, std::vector<std::string>>& Gr
     return qtd_batalhões;
 }
 
-std::unordered_map<std::string, int> BfsBatalhao(const std::string& inicio, const std::unordered_map<std::string, std::vector<std::string>>& Grafo) {
-    // Um mapa para armazenar se o vértice foi visitado
-    std::unordered_map<std::string, bool> visitados;
-
-    // Mapa para armazenar a distância de cada vértice ao vértice de início
-    std::unordered_map<std::string, int> distancias;
-    
-    // Fila para o BFS
-    std::queue<std::string> q;
-    
-    // Inicializa a distância do início como 0
-    distancias[inicio] = 0;
-    visitados[inicio] = true;
-    q.push(inicio);
-
-    // Enquanto houver vértices na fila
-    while (!q.empty()) {
-        // Pega o vértice da frente da fila
-        std::string v = q.front();
-        q.pop();
-
-        // Visita os vizinhos do vértice atual
-        for (const std::string& vizinho : Grafo.at(v)) {
-            if (visitados.find(vizinho) == visitados.end()) {  // Se o vizinho ainda não foi visitado
-                visitados[vizinho] = true;  // Marca o vizinho como visitado
-                distancias[vizinho] = distancias[v] + 1;  // Atualiza a distância do vizinho
-                q.push(vizinho);  // Coloca o vizinho na fila
-            }
-        }
-    }
-
-return distancias;
-}
 
 std::string Batalhaoadicional(const std::string& inicio, 
                               const std::unordered_map<std::string, std::vector<std::string>>& Grafo, 

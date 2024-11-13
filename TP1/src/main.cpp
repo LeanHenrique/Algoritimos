@@ -4,6 +4,7 @@
 #include <string>
 #include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/capital.h"
 #include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/batalhao.h"
+#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/patrulha.h"
 
 int main(){
     std::unordered_map<std::string, std::vector<std::string>> Grafo;
@@ -38,6 +39,8 @@ int main(){
     // Vetor para armazenar os componentes fortemente conexos
     std::vector<std::vector<std::string>> componentes;
 
+     std::unordered_map<std::string, std::vector<std::string>> regioes;
+
     // Chama a função para calcular o número de componentes fortemente conexos
     int qtd_batalhoes = Kosaraju(Grafo, componentes);
 
@@ -52,6 +55,7 @@ int main(){
      // Realiza o BFS para encontrar o vértice mais próximo em cada componente a partir da capital
     for (const auto& componente : componentes) {
         std::string vertice_mais_proximo = Batalhaoadicional(resultado, Grafo, componente);
+        regioes[vertice_mais_proximo].emplace_back(componente);
         for (const auto& vertice : componente) {
         }
         
@@ -59,9 +63,7 @@ int main(){
         std::cout << vertice_mais_proximo << std::endl;
         }
     }
-    
- 
-    
+
 
     return 0;
 }
