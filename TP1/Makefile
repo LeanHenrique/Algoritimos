@@ -5,7 +5,7 @@ SRC = src
 OBJ = obj
 INC = include
 BIN = bin
-CFLAGS = -Wall -g -c -I$(INC)
+CFLAGS = -Wall -g -c -I$(INC) -Wextra -Wpedantic -Wformat-security -Wconversion -Werror
 
 # Nome do executável
 EXE = $(BIN)/tp1.out

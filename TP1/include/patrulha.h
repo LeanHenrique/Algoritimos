@@ -8,25 +8,29 @@
 #include <unordered_set>
 #include <stack>
 
-// Função para verificar se um vértice está no componente
-bool estaNoComponente(const std::vector<std::string>& componente, const std::string& vertice);
-
-// Função para construir o subgrafo a partir do grafo original e o componente
-std::unordered_map<std::string, std::vector<std::string>> construirSubgrafo(
-    const std::unordered_map<std::string, std::vector<std::string>>& grafoOriginal,
-    const std::vector<std::string>& componente
-);
-
-// Função para verificar se todos os vértices de um componente têm graus de entrada == saída
-bool verificaGrauEuleriano(const std::unordered_map<std::string, std::vector<std::string>>& componente);
-
-// Algoritmo de Hierholzer para encontrar ciclo euleriano em um grafo direcionado
-std::vector<std::string> encontraCicloEuleriano(std::unordered_map<std::string, std::vector<std::string>>& componente, const std::string& inicio);
-
-// Função para calcular ciclo euleriano para todos os componentes
-std::vector<std::vector<std::string>> calculaCiclosEulerianosParaComponentes(
-    const std::unordered_map<std::string, std::vector<std::string>>& grafoOriginal,
+// Função que cria subgrafos a partir dos componentes fortemente conexos
+std::vector<std::unordered_map<std::string, std::vector<std::string>>> criaSubgrafos(
+    const std::unordered_map<std::string, std::vector<std::string>>& grafo,
     const std::vector<std::vector<std::string>>& componentes
 );
 
-#endif //PATRULHA_H
+// Função principal para encontrar os ciclos em todos os subgrafos
+void encontrarCiclosEmSubgrafos(
+    const std::unordered_map<std::string, std::vector<std::string>>& Grafo,
+    const std::vector<std::vector<std::string>>& componentes,
+    const std::vector<std::string>& batalhoes
+);
+
+// Função que verifica se existe um ciclo euleriano a partir de um vértice origem
+bool encontrarCicloEuleriano(
+    const std::unordered_map<std::string, std::vector<std::string>>& Grafo, 
+    std::string origem, 
+    std::vector<std::string>& ciclo
+);
+
+// Função que verifica se todos os vértices têm graus iguais (necessário para ciclo euleriano)
+bool verificarGrausIguais(
+    const std::unordered_map<std::string, std::vector<std::string>>& grafo
+);
+
+#endif // PATRULHA_H

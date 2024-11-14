@@ -10,10 +10,11 @@
 #include <queue>
 #include <stack>
 
-
+// Função que implementa o algoritmo de Kosaraju para encontrar componentes fortemente conexos
 int Kosaraju(const std::unordered_map<std::string, std::vector<std::string>>& Grafo, 
              std::vector<std::vector<std::string>>& componentes);
 
+// Função para realizar a batalha adicional a partir de um vértice de início
 std::string Batalhaoadicional(const std::string& inicio, 
                               const std::unordered_map<std::string, std::vector<std::string>>& Grafo, 
                               const std::vector<std::string>& componente);

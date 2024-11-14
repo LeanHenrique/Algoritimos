@@ -25,4 +25,6 @@ void DfsTranspose(
     std::vector<std::string>& componente
 );
 
+
+
 #endif // DFS_H

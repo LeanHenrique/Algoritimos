@@ -1,25 +1,26 @@
 #include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/bfs.h"
 
-std::pair<std::string, int> BfsCapital(const std::string& inicio, const std::unordered_map<std::string, std::vector<std::string>>& Grafo) {
-    // Um mapa para armazenar se o vértice foi visitado
+// Função BFS para encontrar o vértice mais distante a partir do vértice inicial (Capital)
+std::pair<std::string, int> BfsCapital(const std::string& inicio, 
+                                       const std::unordered_map<std::string, std::vector<std::string>>& Grafo) {
+    // Mapa para armazenar se o vértice foi visitado
     std::unordered_map<std::string, bool> visitados;
 
     // Mapa para armazenar a distância de cada vértice ao vértice de início
     std::unordered_map<std::string, int> distancias;
-    
-    // Fila para o BFS
+
+    // Fila para o BFS (Armazena os vértices a serem visitados)
     std::queue<std::string> q;
-    
-    // Inicializa a distância do início como 0
+
+    // Inicializa a distância do vértice de início como 0 e o marca como visitado
     distancias[inicio] = 0;
     visitados[inicio] = true;
     q.push(inicio);
 
-    // Enquanto houver vértices na fila
+    // Realiza o BFS enquanto houver vértices na fila
     while (!q.empty()) {
-        // Pega o vértice da frente da fila
-        std::string v = q.front();
-        q.pop();
+        std::string v = q.front();  // Pega o vértice da frente da fila
+        q.pop();  // Remove o vértice da fila
 
         // Visita os vizinhos do vértice atual
         for (const std::string& vizinho : Grafo.at(v)) {
@@ -33,45 +34,46 @@ std::pair<std::string, int> BfsCapital(const std::string& inicio, const std::uno
 
     // Verifica se o grafo é conexo a partir do vértice de início
     if (visitados.size() != Grafo.size()) {
-        // Caso o grafo não seja conexo, retorna um par vazio (ou outro valor de erro)
+        // Se o grafo não for conexo, retorna um par vazio
         return {"", -1};
     }
 
-// Encontrar o vértice com a maior distância manualmente
-int maiorDistanciaValor = -1; // Ou qualquer valor inicial que seja mais baixo que a distância mínima possível
+    // Encontra o vértice com a maior distância
+    int maiorDistanciaValor = -1;  // Inicializa com um valor menor que qualquer distância válida
+    std::string verticeMaisDistante;
 
-// Iterar sobre todas as distâncias para encontrar o maior
-for (const auto& par : distancias) {
-    if (par.second > maiorDistanciaValor) {
-        maiorDistanciaValor = par.second;
+    for (const auto& par : distancias) {
+        if (par.second > maiorDistanciaValor) {
+            maiorDistanciaValor = par.second;  // Atualiza a maior distância
+            verticeMaisDistante = par.first;  // Atualiza o vértice com a maior distância
+        }
     }
-}
-    std::pair<std::string, int> parResultado = {inicio, maiorDistanciaValor};                      
 
-    // Retorna o par (vértice, maior distância)
-    return parResultado;
+    // Retorna o vértice mais distante e a sua distância
+    return {verticeMaisDistante, maiorDistanciaValor};
 }
 
-std::unordered_map<std::string, int> BfsBatalhao(const std::string& inicio, const std::unordered_map<std::string, std::vector<std::string>>& Grafo) {
-    // Um mapa para armazenar se o vértice foi visitado
+// Função BFS para calcular as distâncias de cada vértice a partir do vértice inicial (Batalhão)
+std::unordered_map<std::string, int> BfsBatalhao(const std::string& inicio, 
+                                                const std::unordered_map<std::string, std::vector<std::string>>& Grafo) {
+    // Mapa para armazenar se o vértice foi visitado
     std::unordered_map<std::string, bool> visitados;
 
     // Mapa para armazenar a distância de cada vértice ao vértice de início
     std::unordered_map<std::string, int> distancias;
-    
-    // Fila para o BFS
+
+    // Fila para o BFS (Armazena os vértices a serem visitados)
     std::queue<std::string> q;
-    
-    // Inicializa a distância do início como 0
+
+    // Inicializa a distância do vértice de início como 0 e o marca como visitado
     distancias[inicio] = 0;
     visitados[inicio] = true;
     q.push(inicio);
 
-    // Enquanto houver vértices na fila
+    // Realiza o BFS enquanto houver vértices na fila
     while (!q.empty()) {
-        // Pega o vértice da frente da fila
-        std::string v = q.front();
-        q.pop();
+        std::string v = q.front();  // Pega o vértice da frente da fila
+        q.pop();  // Remove o vértice da fila
 
         // Visita os vizinhos do vértice atual
         for (const std::string& vizinho : Grafo.at(v)) {
@@ -83,5 +85,6 @@ std::unordered_map<std::string, int> BfsBatalhao(const std::string& inicio, cons
         }
     }
 
-return distancias;
+    // Retorna o mapa com as distâncias calculadas de todos os vértices
+    return distancias;
 }
