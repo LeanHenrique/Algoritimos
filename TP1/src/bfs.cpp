@@ -88,3 +88,4 @@ std::unordered_map<std::string, int> BfsBatalhao(const std::string& inicio,
     // Retorna o mapa com as distâncias calculadas de todos os vértices
     return distancias;
 }
+

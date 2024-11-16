@@ -14,11 +14,27 @@ std::vector<std::unordered_map<std::string, std::vector<std::string>>> criaSubgr
     const std::vector<std::vector<std::string>>& componentes
 );
 
-// Função principal para encontrar os ciclos em todos os subgrafos
-void encontrarCiclosEmSubgrafos(
-    const std::unordered_map<std::string, std::vector<std::string>>& Grafo,
-    const std::vector<std::vector<std::string>>& componentes,
-    const std::vector<std::string>& batalhoes
+// Função principal para resolver o Problema do Carteiro Chinês
+void resolverCarteiroChines(const std::unordered_map<std::string, std::vector<std::string>>& Grafo,
+                            const std::vector<std::vector<std::string>>& componentes,
+                            const std::vector<std::string>& batalhoes);
+
+// Função que encontra os vértices com graus de entrada e saída diferentes
+std::vector<std::string> encontrarVerticesImpares(
+    const std::unordered_map<std::string, std::vector<std::string>>& grafo
+);
+
+// Função que encontra o menor caminho entre dois vértices
+int menorCaminho(
+    const std::unordered_map<std::string, std::vector<std::string>>& grafo,
+    const std::string& origem,
+    const std::string& destino
+);
+
+// Função que emparelha vértices ímpares e torna o grafo Euleriano
+void tornarEuleriano(
+    std::unordered_map<std::string, std::vector<std::string>>& grafo,
+    const std::vector<std::string>& verticesImpares
 );
 
 // Função que verifica se existe um ciclo euleriano a partir de um vértice origem
@@ -26,11 +42,6 @@ bool encontrarCicloEuleriano(
     const std::unordered_map<std::string, std::vector<std::string>>& Grafo, 
     std::string origem, 
     std::vector<std::string>& ciclo
-);
-
-// Função que verifica se todos os vértices têm graus iguais (necessário para ciclo euleriano)
-bool verificarGrausIguais(
-    const std::unordered_map<std::string, std::vector<std::string>>& grafo
 );
 
 #endif // PATRULHA_H
