@@ -65,7 +65,7 @@ int main() {
     }
 
     // Encontra e exibe os patrulhamentos em cada subgrafo
-    resolverCarteiroChines(Grafo, componentes, batalhoes);
+    rodarDFSNosSubgrafos(Grafo, componentes, batalhoes);
 
     return 0;
 }
