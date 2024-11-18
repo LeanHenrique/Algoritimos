@@ -1,6 +1,7 @@
-#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/batalhao.h"
-#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/bfs.h"
-#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/dfs.h"
+#include "batalhao.h"
+#include "bfs.h"
+#include "dfs.h"
+#include "auxiliares.h"
 
 // Função principal para encontrar componentes fortemente conexos usando o algoritmo de Kosaraju
 int Kosaraju(const std::unordered_map<std::string, std::vector<std::string>>& Grafo, std::vector<std::vector<std::string>>& componentes ) {
@@ -51,9 +52,8 @@ int Kosaraju(const std::unordered_map<std::string, std::vector<std::string>>& Gr
 }
 
 
-// Função para determinar o vértice com a menor distância em um componente, a partir de um vértice inicial
 std::string Batalhaoadicional(const std::string& inicio, 
-                              const std::unordered_map<std::string, std::vector<std::string>>& Grafo, 
+                              const std::unordered_map<std::string, std::vector<std::string>>& Grafo,
                               const std::vector<std::string>& componente) {
     // Obtém as distâncias de cada vértice a partir do vértice de início usando BFS
     std::unordered_map<std::string, int> distancias = BfsBatalhao(inicio, Grafo);
@@ -63,7 +63,10 @@ std::string Batalhaoadicional(const std::string& inicio,
     int menor_distancia = 100000;  // Valor alto para garantir que qualquer distância válida será menor
     bool encontrado = false;  // Flag para indicar se algum vértice válido foi encontrado
 
-    // Percorre os vértices no componente para encontrar o que tem a menor distância
+    // Lista para armazenar os vértices empatados (com a mesma distância)
+    std::vector<std::string> vertices_empate;
+
+    // Percorre os vértices no componente para encontrar os que têm a menor distância
     for (const std::string& vertice : componente) {
         // Verifica se o vértice está nas distâncias calculadas
         if (distancias.find(vertice) != distancias.end()) {
@@ -73,11 +76,50 @@ std::string Batalhaoadicional(const std::string& inicio,
             if (!encontrado || distancia_atual < menor_distancia) {
                 menor_distancia = distancia_atual;  // Atualiza a menor distância
                 vertice_min_distancia = vertice;    // Atualiza o vértice com a menor distância
+                vertices_empate.clear();  // Limpa os vértices anteriores
+                vertices_empate.push_back(vertice);  // Armazena o novo vértice com a menor distância
                 encontrado = true;  // Marca que encontramos pelo menos um vértice válido
+            }
+            // Caso encontre outro vértice com a mesma distância
+            else if (distancia_atual == menor_distancia) {
+                vertices_empate.push_back(vertice);  // Adiciona o vértice empatado
             }
         }
     }
 
-    // Retorna o vértice com a menor distância ou uma string vazia caso não encontre nenhum
-    return encontrado ? vertice_min_distancia : "";  // Retorna o vértice com a menor distância ou vazio
+    // Se houver mais de um vértice empatado, resolve o desempate
+    if (vertices_empate.size() > 1) {
+        // Cria o subgrafo para o componente
+        std::unordered_map<std::string, std::vector<std::string>> subgrafo = criaSubgrafoBatalhao(Grafo, componente);
+
+        // Armazena o vértice com a menor distância (por critério de desempate)
+        std::string vertice_desempate;
+        int menor_distancia_subgrafo = 100000;  // Valor alto para garantir que qualquer distância válida será menor
+
+        // Compara os vértices empatados no subgrafo
+        for (const auto& vertice_empate : vertices_empate) {
+            // Obtém as distâncias dentro do subgrafo
+            std::unordered_map<std::string, int> distancias_subgrafo = BfsBatalhao(vertice_empate, subgrafo);
+
+            // Calcula a distância total para os outros vértices dentro do subgrafo
+            int distancia_total = 0;
+            for (const auto& vertice : componente) {
+                if (distancias_subgrafo.find(vertice) != distancias_subgrafo.end()) {
+                    distancia_total += distancias_subgrafo[vertice];  // Soma as distâncias dos outros vértices
+                }
+            }
+
+            // Atualiza o vértice desempate se encontrar uma distância total menor
+            if (distancia_total < menor_distancia_subgrafo) {
+                menor_distancia_subgrafo = distancia_total;
+                vertice_desempate = vertice_empate;
+            }
+        }
+
+        // Retorna o vértice com a menor distância total dentro do subgrafo
+        return vertice_desempate;
+    }
+
+    // Caso não haja empate, retorna o vértice com a menor distância
+    return vertice_min_distancia;
 }

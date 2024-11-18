@@ -1,6 +1,7 @@
 #ifndef DFS_H
 #define DFS_H
 
+#include <iostream>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -24,6 +25,12 @@ void DfsTranspose(
     std::unordered_set<std::string>& visitados, 
     std::vector<std::string>& componente
 );
+
+bool DfsPatrulhamento(
+    const std::string& atual, 
+    const std::string& inicio, 
+    std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>& subgrafo, 
+    std::vector<std::string>& ciclo);
 
 
 

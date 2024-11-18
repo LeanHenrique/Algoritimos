@@ -1,10 +1,6 @@
-#include <iostream>
-#include <unordered_map>
-#include <vector>
-#include <string>
-#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/capital.h"
-#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/batalhao.h"
-#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/patrulha.h"
+#include "capital.h"
+#include "batalhao.h"
+#include "patrulha.h"
 
 int main() {
     std::unordered_map<std::string, std::vector<std::string>> Grafo;

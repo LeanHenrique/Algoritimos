@@ -8,7 +8,7 @@ BIN = bin
 CFLAGS = -Wall -g -c -I$(INC) -Wextra -Wpedantic -Wformat-security -Wconversion -Werror
 
 # Nome do executável
-EXE = $(BIN)/tp1.out
+EXE = $(BIN)/tp1
 
 # Listar arquivos .cpp e arquivos objeto
 SRCS = $(wildcard $(SRC)/*.cpp)

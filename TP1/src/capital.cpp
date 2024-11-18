@@ -1,11 +1,5 @@
-#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/capital.h"
-#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/bfs.h"
-#include <queue>
-#include <iostream>
-
-
-
-
+#include "capital.h"
+#include "bfs.h"
 
 std::string Capital(const std::unordered_map<std::string, std::vector<std::string>>& Grafo){
     // Mapa para armazenar os resultados de cada BFS

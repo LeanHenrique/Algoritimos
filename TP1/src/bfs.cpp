@@ -1,4 +1,4 @@
-#include "/home/lean/Documentos/Algoritmos/Algoritimos/TP1/include/bfs.h"
+#include "bfs.h"
 
 // Função BFS para encontrar o vértice mais distante a partir do vértice inicial (Capital)
 std::pair<std::string, int> BfsCapital(const std::string& inicio, 
