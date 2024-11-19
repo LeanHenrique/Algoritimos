@@ -29,6 +29,10 @@ $(OBJ)/%.o: $(SRC)/%.cpp
 directories:
 	mkdir -p $(OBJ) $(BIN)
 
+# Executar o Valgrind
+valgrind: $(EXE)
+	valgrind --leak-check=full --track-origins=yes --show-reachable=yes $(EXE)
+
 debug: $(EXE)
 	gdb $(EXE)
 
