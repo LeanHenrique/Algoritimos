@@ -1,10 +1,11 @@
 #include <iostream>
 #include <unordered_map>
 #include <queue>
-#include <climits> // Para usar INT_MAX
+#include <vector>
 
-#define INFINITO INT_MAX
+#define INFINITO 1000000 // Substitui INT_MAX por um valor grande
 
+// Função BFS para encontrar o caminho aumentante
 bool bfs(const std::unordered_map<int, std::unordered_map<int, int>>& residualGraph, int fonte, int sumidouro, std::unordered_map<int, int>& pai) {
     std::unordered_map<int, bool> visitado;
     std::queue<int> fila;
@@ -32,7 +33,20 @@ bool bfs(const std::unordered_map<int, std::unordered_map<int, int>>& residualGr
     return false; // Não há caminho aumentante
 }
 
-int fordFulkerson(std::unordered_map<int, std::unordered_map<int, int>>& capacidade, int fonte, int sumidouro) {
+// Função para verificar se um valor está em um vetor
+bool find(const std::vector<int>& vec, int valor) {
+    // Percorre o vetor e compara cada elemento com o valor
+    for (std::size_t i = 0; i < vec.size(); ++i) {
+        if (vec[i] == valor) {
+            return true; // Retorna o índice se o valor for encontrado
+        }
+    }
+    return false; // Retorna false se o valor não for encontrado
+}
+
+// Implementação do algoritmo de Ford-Fulkerson
+int fordFulkerson(std::unordered_map<int, std::unordered_map<int, int>>& capacidade, int fonte, int sumidouro, 
+                  std::unordered_map<int, std::unordered_map<int, int>>& arestasMax, const std::unordered_map<int, std::unordered_map<int, int>>& Graph) {
     std::unordered_map<int, std::unordered_map<int, int>> residualGraph = capacidade;
     std::unordered_map<int, int> pai;
     int fluxoMaximo = 0;
@@ -56,12 +70,40 @@ int fordFulkerson(std::unordered_map<int, std::unordered_map<int, int>>& capacid
         fluxoMaximo += fluxoCaminho;
     }
 
+    // Verifica as arestas com capacidade máxima atingida após o algoritmo
+    for (const auto& [u, arestas] : capacidade) {
+        for (const auto& [v, cap] : arestas) {
+            // Verifica se a aresta existe no grafo original
+            if (residualGraph[u][v] == 0 && cap > 0 && Graph.find(u) != Graph.end() && Graph.at(u).find(v) != Graph.at(u).end()) {
+                // Se a aresta existe no grafo original e atingiu a capacidade máxima, adiciona a aresta à lista
+                arestasMax[u][v] = cap;
+            }
+        }
+    }
+
     return fluxoMaximo;
 }
+
+void ordenarArestas(std::vector<std::tuple<int, int, int>>& arestas) {
+    std::vector<std::tuple<int, int, int>>::size_type n = arestas.size(); // Corrigido
+    // Implementação do algoritmo Bubble Sort para ordenar as arestas pela capacidade (decrescente)
+    for (std::vector<std::tuple<int, int, int>>::size_type i = 0; i < n - 1; ++i) {
+        for (std::vector<std::tuple<int, int, int>>::size_type j = 0; j < n - 1 - i; ++j) {
+            if (std::get<2>(arestas[j]) < std::get<2>(arestas[j + 1])) {
+                // Troca os elementos se estiverem na ordem errada
+                std::swap(arestas[j], arestas[j + 1]);
+            }
+        }
+    }
+}
+
 
 int main() {
     std::unordered_map<int, std::unordered_map<int, int>> Graph;
     std::unordered_map<int, int> nodes;
+    std::vector<int> Geradores;
+    int DemandaMax = 0;
+    int EnergiaMax = 0;
 
     int V, E;
     std::cin >> V >> E;
@@ -70,6 +112,10 @@ int main() {
     for (int i = 0; i < V; i++) {
         int indice, demanda;
         std::cin >> indice >> demanda;
+        DemandaMax += demanda;
+        if(demanda == 0){
+            Geradores.push_back(indice);
+        }
         nodes[indice] = demanda;
     }
 
@@ -77,7 +123,11 @@ int main() {
     for (int i = 0; i < E; i++) {
         int Vi, Vj, C;
         std::cin >> Vi >> Vj >> C;
-        Graph[Vi][Vj] = C; // Adiciona a capacidade da aresta Vi -> Vj
+        if(find(Geradores,Vi)){
+            EnergiaMax += C;
+        }
+        if(Vi)
+            Graph[Vi][Vj] = C; // Adiciona a capacidade da aresta Vi -> Vj
     }
 
     // Construção do grafo com fonte e sumidouro artificiais
@@ -108,11 +158,35 @@ int main() {
         }
     }
 
+    // Mapa para armazenar as arestas que atingiram a capacidade máxima
+    std::unordered_map<int, std::unordered_map<int, int>> arestasMax;
+
     // Executa o algoritmo de Ford-Fulkerson
-    int fluxoMaximo = fordFulkerson(capacidade, fonteArtificial, sumidouroArtificial);
+    int fluxoMaximo = fordFulkerson(capacidade, fonteArtificial, sumidouroArtificial, arestasMax, Graph);
+    int Energia_perdida = EnergiaMax - fluxoMaximo;
+    int Energia_NAtendida =  DemandaMax - fluxoMaximo;
 
     // Exibe o fluxo máximo total
-    std::cout << "Fluxo máximo total: " << fluxoMaximo << "\n";
+    std::cout << fluxoMaximo << std::endl;
+    std::cout << Energia_NAtendida << std::endl;
+    std::cout << Energia_perdida << std::endl;
+
+    // Ordena as arestas com capacidade máxima atingida por capacidade (decrescente)
+    std::vector<std::tuple<int, int, int>> arestasOrdenadas;
+    for (const auto& [u, arestas] : arestasMax) {
+        for (const auto& [v, cap] : arestas) {
+            arestasOrdenadas.push_back({u, v, cap});
+        }
+    }
+
+    // Ordena as arestas pela capacidade (em ordem decrescente)
+    ordenarArestas(arestasOrdenadas);
+
+    // Exibe as arestas com capacidade máxima atingida
+    std::cout << arestasOrdenadas.size() << std::endl;
+    for (const auto& [u, v, cap] : arestasOrdenadas) {
+        std::cout << u << " " << v << " " << cap << std::endl;
+    }
 
     return 0;
 }
