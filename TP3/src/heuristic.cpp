@@ -7,9 +7,8 @@
 
 using namespace std;
 
-// Função para o algoritmo Nearest Neighbor
-pair<int, vector<string>> tspNearestNeighbor(const vector<string>& cities, const unordered_map<string, unordered_map<string, int>>& adjMatrix) {
-    size_t n = cities.size();  // Usar size_t para garantir compatibilidade com índices de vetores
+pair<int, vector<string>> tspNearestNeighbor(const vector<string>& cities, const unordered_map<string, unordered_map<string, int>>& Graph) {
+    size_t n = cities.size(); 
     unordered_map<string, size_t> cityIndex;  // Mapeia o nome da cidade para o índice
 
     for (size_t i = 0; i < n; i++) {
@@ -19,22 +18,22 @@ pair<int, vector<string>> tspNearestNeighbor(const vector<string>& cities, const
     vector<bool> visited(n, false);  // Marca as cidades já visitadas
     vector<string> route;           // Armazena a sequência das cidades visitadas
     int totalCost = 0;              // Custo total da rota
-    const int INF = 1000000;        // Definindo um valor suficientemente grande para representar "infinito"
+    const int INF = 1000000;       
 
     // Começamos com a primeira cidade
     route.push_back(cities[0]);
     visited[0] = true;
-    size_t currentCity = 0;         // Usar size_t para armazenar o índice da cidade atual
+    size_t currentCity = 0;         //para armazenar o índice da cidade atual
 
     // Visitar todas as cidades
     for (size_t i = 1; i < n; i++) {
-        size_t nearestCity = -1;   // Usar size_t aqui para garantir que o tipo é compatível
+        size_t nearestCity = -1;   
         int minDistance = INF;
 
         // Encontra a cidade mais próxima
         for (size_t j = 0; j < n; j++) {
-            if (!visited[j] && adjMatrix.at(cities[currentCity]).at(cities[j]) < minDistance) {
-                minDistance = adjMatrix.at(cities[currentCity]).at(cities[j]);
+            if (!visited[j] && Graph.at(cities[currentCity]).at(cities[j]) < minDistance) {
+                minDistance = Graph.at(cities[currentCity]).at(cities[j]);
                 nearestCity = j;
             }
         }
@@ -47,7 +46,7 @@ pair<int, vector<string>> tspNearestNeighbor(const vector<string>& cities, const
     }
 
     // Retorna ao ponto de origem (primeira cidade)
-    totalCost += adjMatrix.at(cities[currentCity]).at(cities[0]);
+    totalCost += Graph.at(cities[currentCity]).at(cities[0]);
 
     return {totalCost, route};
 }

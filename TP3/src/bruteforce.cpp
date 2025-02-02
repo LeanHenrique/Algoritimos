@@ -3,7 +3,7 @@
 
 using namespace std;
 
-// Função auxiliar para gerar permutações manualmente
+// Função auxiliar para gerar permutações 
 void permute(vector<string>& arr, int l, int r, vector<vector<string>>& permutations) {
     if (l == r) {
         permutations.push_back(arr);
@@ -16,24 +16,22 @@ void permute(vector<string>& arr, int l, int r, vector<vector<string>>& permutat
     }
 }
 
-// Função que resolve o problema do Caixeiro Viajante por força bruta
-pair<int, vector<string>> tspBruteForce(const vector<string>& cities, const unordered_map<string, unordered_map<string, int>>& adjMatrix) {
+pair<int, vector<string>> tspBruteForce(const vector<string>& cities, const unordered_map<string, unordered_map<string, int>>& Graph) {
     vector<vector<string>> permutations;
     vector<string> perm = cities;
     permute(perm, 0, static_cast<int>(perm.size()) - 1, permutations);
-
     
-    int minCost = 1e9; // Valor alto arbitrário para representar infinito
+    int minCost = 1e9; 
     vector<string> bestRoute;
     
     // Testa todas as permutações possíveis das cidades
     for (const auto& perm : permutations) {
         int cost = 0;
         for (size_t i = 0; i < perm.size() - 1; i++) {
-            cost += adjMatrix.at(perm[i]).at(perm[i + 1]);
+            cost += Graph.at(perm[i]).at(perm[i + 1]);
         }
         // Adiciona o custo de retornar à cidade inicial
-        cost += adjMatrix.at(perm.back()).at(perm.front());
+        cost += Graph.at(perm.back()).at(perm.front());
         
         // Se encontrou um custo menor, armazena a melhor rota
         if (cost < minCost) {
